@@ -7,5 +7,5 @@ import com.WorldBeauty.models.Cliente;
 public interface ClienteRepository extends CrudRepository<Cliente, String>{
 	
 	Cliente findByid(long id);
-
+	Iterable<Cliente> findAllBygenero(String genero);
 }

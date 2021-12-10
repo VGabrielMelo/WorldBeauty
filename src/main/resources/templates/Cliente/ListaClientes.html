@@ -12,12 +12,13 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <link rel="stylesheet" href="style/styleCss.css"/>
 </head>
+
 <body>
 	
 	<header>
 		<nav class="menu">
 		    <div class="nav-wrapper">
-		      <a href="/Clientes" class="brand-logo">Lista de Clientes</a>
+		      <a href="#" class="brand-logo">Detalhes Cliente</a>
 		      <ul id="nav-mobile" class="right hide-on-med-and-down">
 		        <li><a href="/cadastrarCliente" class="waves-effect waves-light btn"><i class="material-icons left">add_circle_outline</i>Cadastrar Cliente</a></li>
 		      </ul>
@@ -25,14 +26,29 @@
 		</nav>
 	
 	</header>
+	<table class="container">
+		<thead>
+			<tr>
+				<th>Nome</th>
+				<th>Local</th>
+				<th>Data Nascimento</th>
+				<th>Gênero</th>
+				<th>Deletar</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="cliente : ${clientes}">
+				<td><a th:href="${(#mvc.url('CC#listaclientes').arg(0, cliente.id)).build()}"><span th:text="${cliente.nome}"></span></a></td>
+				<td><span th:text="${cliente.telefone}"></span></td>
+				<td><span th:text="${cliente.data_nascimento}"></span></td>
+				<td><span th:text="${cliente.genero}"></span></td>
+				<td><a class="waves-effect waves-light btn-small" th:href="${(#mvc.url('CC#deletarCliente').arg(0, cliente.id)).build()}"><i class="material-icons left">delete</i></a></td>
+			</tr>
+		</tbody>
 	
-	<h1>Agenda de clientes!</h1>
-	<h3>Faça seu Login e agende seus serviços!</h3>
+	</table>
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="materialize/js/materialize.min.js"></script>
 
 </body>
-
-
-</html>

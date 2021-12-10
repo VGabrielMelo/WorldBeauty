@@ -1,5 +1,7 @@
 package com.WorldBeauty.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -24,11 +26,11 @@ public class ClienteController {
 
 	@RequestMapping(value="/cadastrarCliente", method=RequestMethod.GET)
 	public String form(){
-		return "cliente/formcliente";
+		return "Cliente/formCliente";
 	}
 	
-	@RequestMapping(value="/cadastrarEvento", method=RequestMethod.POST)
-	public String form(Cliente cliente, BindingResult result, RedirectAttributes attributes){
+	@RequestMapping(value="/cadastrarCliente", method=RequestMethod.POST)
+	public String form(@Valid Cliente cliente, BindingResult result, RedirectAttributes attributes){
 		if(result.hasErrors()){
 			attributes.addFlashAttribute("mensagem", "Verifique os campos!");
 			return "redirect:/cadastrarCliente";
@@ -40,16 +42,24 @@ public class ClienteController {
 	
 	@RequestMapping("/Clientes")
 	public ModelAndView listaclientes(){
-		ModelAndView mv = new ModelAndView("listaClientes");
+		ModelAndView mv = new ModelAndView("Cliente/ListaClientes");
 		Iterable<Cliente> clientes = cr.findAll();
 		mv.addObject("clientes", clientes);
 		return mv;
 	}
 	
-	@RequestMapping(value="/{id}", method=RequestMethod.GET)
+	@RequestMapping("/Clientes")
+	public ModelAndView listaclientesgenero(String genero){
+		ModelAndView mv = new ModelAndView("Cliente/ListaClientes");
+		Iterable<Cliente> clientes = cr.findAllBygenero(genero);
+		mv.addObject("clientes", clientes);
+		return mv;
+	}
+	
+	@RequestMapping(value="/Cliente/{id}", method=RequestMethod.GET)
 	public ModelAndView serviçoscliente(@PathVariable("id") long id){
 		Cliente cliente = cr.findByid(id);
-		ModelAndView mv = new ModelAndView("Cliente/serviços");
+		ModelAndView mv = new ModelAndView("Cliente/DetalhesCliente");
 		mv.addObject("cliente", cliente);
 		
 		Iterable<Serviço> serviços = sr.findByCliente(cliente);
@@ -58,35 +68,35 @@ public class ClienteController {
 		return mv;
 	}
 	
-	@RequestMapping("/deletarCliente")
-	public String deletarCliente(long id){
-		Cliente cliente = cr.findByid(id);
-		cr.delete(cliente);
-		return "redirect:/clientes";
-	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.POST)
-	public String detalhesEventoPost(@PathVariable("id") long id,  Serviço serviço,  BindingResult result, RedirectAttributes attributes){
+	@RequestMapping(value="/Cliente/{id}", method=RequestMethod.POST)
+	public String detalhesServiçoPost(@PathVariable("id") long id,  Serviço serviço,  BindingResult result, RedirectAttributes attributes){
 		if(result.hasErrors()){
 			attributes.addFlashAttribute("mensagem", "Verifique os campos!");
-			return "redirect:/{id}";
+			return "redirect:/Cliente/{id}";
 		}
 		Cliente cliente = cr.findByid(id);
 		serviço.setCliente(cliente);
 		sr.save(serviço);
 		attributes.addFlashAttribute("mensagem", "Serviço adicionado com sucesso!");
-		return "redirect:/{id}";
+		return "redirect:/Cliente/{id}";
+	}
+	
+	@RequestMapping("/deletarCliente")
+	public String deletarCliente(long id){
+		Cliente cliente = cr.findByid(id);
+		cr.delete(cliente);
+		return "redirect:/Clientes";
 	}
 	
 	@RequestMapping("/deletarServiço")
-	public String deletarServiço(String identificaçã){
-		Serviço serviço = sr.findByid(identificaçã);
+	public String deletarServiço(String identificação){
+		Serviço serviço = sr.findByid(identificação);
 		sr.delete(serviço);
 		
 		Cliente cliente = serviço.getCliente();
 		long idLong = cliente.getId();
 		String id = "" + idLong;
-		return "redirect:/" + id;
+		return "redirect:/Cliente/" + id;
 	}
 		
 }

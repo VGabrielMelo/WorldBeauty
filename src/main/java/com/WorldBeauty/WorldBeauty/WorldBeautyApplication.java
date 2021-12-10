@@ -10,7 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class WorldBeautyApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(WorldBeautyApplication.class, args);
-		System.out.print(new BCryptPasswordEncoder().encode("123"));
+		//System.out.print(new BCryptPasswordEncoder().encode("123"));
 	}
 
 }
